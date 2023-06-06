@@ -4,7 +4,6 @@ import Wrapper from "@/components/Wrapper";
 import { addToCart } from "@/store/cartSlice";
 import { fetchDataFromApi } from "@/utils/api";
 import { getDiscountedPricePercentage } from "@/utils/helper";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { useDispatch } from "react-redux";
@@ -27,10 +26,6 @@ export default function ProductDetails({ product, products }) {
       theme: "dark",
     });
   };
-  const router = useRouter();
-  if (router.isFallback) {
-    return <h1>Loading.........</h1>;
-  }
   return (
     <div className="w-full md:py-20">
       <ToastContainer />
@@ -151,25 +146,14 @@ export default function ProductDetails({ product, products }) {
 
 export async function getStaticPaths() {
   const products = await fetchDataFromApi("/api/products?populate=*");
-  // const paths = products?.data.map((product) => ({
-  //   params: {
-  //     slug: product.attributes.slug,
-  //   },
-  // }));
-  const paths = [
-    {
-      params: { slug: "air-jordan-13-retro" },
+  const paths = products?.data.map((product) => ({
+    params: {
+      slug: product.attributes.slug,
     },
-    {
-      params: { slug: "air-jordan-1-mid-se" },
-    },
-    {
-      params: { slug: "air-jordan-1-mid-se-craft" },
-    },
-  ];
+  }));
   return {
     paths,
-    fallback: true,
+    fallback: false,
   };
 }
 

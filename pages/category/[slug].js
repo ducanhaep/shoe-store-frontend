@@ -1,9 +1,9 @@
-import Wrapper from "@/components/Wrapper";
 import ProductCard from "@/components/ProductCard";
-import useSWR from "swr";
+import Wrapper from "@/components/Wrapper";
 import { fetchDataFromApi } from "@/utils/api";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
 const maxResult = 3;
 export default function Category({ category, products, slug }) {
   const [pageIndex, setPageIndex] = useState(1);
