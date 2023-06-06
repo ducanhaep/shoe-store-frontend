@@ -38,7 +38,7 @@ export default function Cart() {
   return (
     <div className="w-full md:py-20">
       <Wrapper>
-        {cartItems.length && (
+        {!!cartItems.length && (
           <>
             {/* Heading and paragraphs start */}
             <div className="mx-auto mt-8 max-w-[800px] text-center md:mt-0">

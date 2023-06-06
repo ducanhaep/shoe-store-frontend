@@ -5,7 +5,7 @@ import { fetchDataFromApi } from "@/utils/api";
 
 export default function Home({ products }) {
   return (
-    <main className="">
+    <main>
       <HeroBanner />
       <Wrapper>
         <div className="mx-auto my-[50px] max-w-[800px] text-center md:my-[80px]">
@@ -23,15 +23,6 @@ export default function Home({ products }) {
           {products?.data?.map((product) => (
             <ProductCard key={product?.id} data={product} />
           ))}
-          {/* <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard /> */}
         </div>
       </Wrapper>
     </main>

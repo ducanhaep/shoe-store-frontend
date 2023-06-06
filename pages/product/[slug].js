@@ -4,19 +4,17 @@ import Wrapper from "@/components/Wrapper";
 import { addToCart } from "@/store/cartSlice";
 import { fetchDataFromApi } from "@/utils/api";
 import { getDiscountedPricePercentage } from "@/utils/helper";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import { IoMdHeartEmpty } from "react-icons/io";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 export default function ProductDetails({ product, products }) {
   const p = product?.data[0]?.attributes;
   const [selectedSize, setSelectedSize] = useState();
   const [showError, setShowError] = useState(false);
   const dispatch = useDispatch();
-
   const notify = () => {
     toast.success("Success. Check your cart!", {
       position: "bottom-right",
@@ -29,7 +27,10 @@ export default function ProductDetails({ product, products }) {
       theme: "dark",
     });
   };
-
+  const router = useRouter();
+  if (router.isFallback) {
+    return <h1>Loading.........</h1>;
+  }
   return (
     <div className="w-full md:py-20">
       <ToastContainer />
@@ -38,7 +39,7 @@ export default function ProductDetails({ product, products }) {
           <div className="mx-auto w-full max-w-[500px] flex-[1.5] md:w-auto lg:mx-0 lg:max-w-full">
             <ProductDetailCarousel images={p.image.data} />
           </div>
-          <div className="flex-1 py-3">
+          <div className="flex-1">
             <div className="mb-2 text-[34px] font-semibold leading-tight">
               {p.name}
             </div>
@@ -133,13 +134,6 @@ export default function ProductDetails({ product, products }) {
             </button>
             {/* Add to cart button end */}
 
-            {/* Wishlist button start */}
-            {/* <button className="mb-10 flex w-full items-center justify-center gap-2 rounded-full border border-black py-4 text-lg font-medium transition-transform hover:opacity-75 active:scale-95">
-              Whishlist
-              <IoMdHeartEmpty size={20} />
-            </button> */}
-            {/* Wishlist button end  */}
-
             <div>
               <div className="mb-5 text-lg font-bold">Product Details</div>
               <div className="markdown text-md mb-5">
@@ -157,24 +151,39 @@ export default function ProductDetails({ product, products }) {
 
 export async function getStaticPaths() {
   const products = await fetchDataFromApi("/api/products?populate=*");
-  const paths = products?.data.map((product) => ({
-    params: {
-      slug: product.attributes.slug,
+  // const paths = products?.data.map((product) => ({
+  //   params: {
+  //     slug: product.attributes.slug,
+  //   },
+  // }));
+  const paths = [
+    {
+      params: { slug: "air-jordan-13-retro" },
     },
-  }));
+    {
+      params: { slug: "air-jordan-1-mid-se" },
+    },
+    {
+      params: { slug: "air-jordan-1-mid-se-craft" },
+    },
+  ];
   return {
     paths,
-    fallback: false, // can also be true or 'blocking'
+    fallback: true,
   };
 }
 
 export async function getStaticProps({ params: { slug } }) {
-  const product = await fetchDataFromApi(
+  const fetchProduct = fetchDataFromApi(
     `/api/products?populate=*&filters[slug][$eq]=${slug}`
   );
-  const products = await fetchDataFromApi(
+  const fetchProductList = fetchDataFromApi(
     `/api/products?populate=*&[filters][slug][$ne]=${slug}`
   );
+  const [product, products] = await Promise.all([
+    fetchProduct,
+    fetchProductList,
+  ]);
   return {
     props: { product, products },
   };

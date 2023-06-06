@@ -2,7 +2,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 export default function ProductDetailCarousel({ images }) {
   return (
-    <div className="sticky top-[50px] mx-auto w-full max-w-[1360px] text-[20px] text-white">
+    <div className="mx-auto w-full max-w-[1360px] text-[20px] text-white">
       <Carousel
         infiniteLoop={true}
         showIndicators={false}

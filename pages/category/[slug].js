@@ -78,18 +78,21 @@ export async function getStaticPaths() {
   }));
   return {
     paths,
-    fallback: false, // can also be true or 'blocking'
+    fallback: false,
   };
 }
 
-// `getStaticPaths` requires using `getStaticProps`
 export async function getStaticProps({ params: { slug } }) {
-  const category = await fetchDataFromApi(
+  const fetchCategory = fetchDataFromApi(
     `/api/categories?filters[slug][$eq]=${slug}`
   );
-  const products = await fetchDataFromApi(
+  const fetchProducts = fetchDataFromApi(
     `/api/products?populate=*&[filters][categories][slug][$eq]=${slug}&pagination[page]=1&pagination[pageSize]=${maxResult}`
   );
+  const [category, products] = await Promise.all([
+    fetchCategory,
+    fetchProducts,
+  ]);
   return {
     props: { category, products, slug },
   };

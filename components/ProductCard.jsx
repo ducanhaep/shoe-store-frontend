@@ -2,7 +2,7 @@ import { getDiscountedPricePercentage } from "@/utils/helper";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function ProductCard({ data: { attributes: product, id } }) {
+export default function ProductCard({ data: { attributes: product } }) {
   return (
     <Link
       href={`/product/${product.slug}`}
@@ -13,6 +13,10 @@ export default function ProductCard({ data: { attributes: product, id } }) {
         height={500}
         src={product.thumbnail.data.attributes.url}
         alt={product.name}
+        priority={
+          product.thumbnail.data.attributes.url ===
+          "https://res.cloudinary.com/ducanhaep/image/upload/v1681312068/thumbnail_ea6c9df700.webp"
+        }
       />
       <div className="p-4 text-black/[0.9]">
         <h2 className="text-lg font-medium">{product.name}</h2>
